@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://g4ft4m86hn50"]
+
+[ext_resource type="Script" path="res://scripts/bezier.gd" id="1_66kol"]
+[ext_resource type="Texture2D" uid="uid://cvr7e6r45wvhg" path="res://art/enemy.png" id="1_ikt1v"]
+
+[node name="bezier" type="Node2D"]
+script = ExtResource("1_66kol")
+
+[node name="p0" type="Node2D" parent="."]
+position = Vector2(130, 34)
+
+[node name="p1" type="Node2D" parent="."]
+position = Vector2(175, 7)
+
+[node name="p2" type="Node2D" parent="."]
+position = Vector2(82, 245)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(130, 35)
+texture = ExtResource("1_ikt1v")

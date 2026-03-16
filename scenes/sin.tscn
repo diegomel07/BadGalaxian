@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6p8ew6ya5ttb"]
+
+[ext_resource type="Script" path="res://scripts/sin.gd" id="1_neev8"]
+[ext_resource type="Texture2D" uid="uid://cvr7e6r45wvhg" path="res://art/enemy.png" id="2_tgm3e"]
+
+[node name="sin" type="Node2D"]
+script = ExtResource("1_neev8")
+
+[node name="A" type="Node2D" parent="."]
+position = Vector2(107, 24)
+
+[node name="B" type="Node2D" parent="."]
+position = Vector2(170, 192)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(108, 24)
+texture = ExtResource("2_tgm3e")

@@ -8,3 +8,5 @@ script = ExtResource("1_dgf0e")
 
 [node name="spaceship" parent="." instance=ExtResource("1_biudj")]
 position = Vector2(108, 237)
+
+[node name="enemies" type="Node2D" parent="."]

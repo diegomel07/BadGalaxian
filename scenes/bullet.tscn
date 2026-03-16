@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://scripts/bullet.gd" id="1_q0o3w"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_152ct"]
-size = Vector2(1, 4)
+size = Vector2(2, 2)
 
 [node name="bullet" type="Area2D"]
 script = ExtResource("1_q0o3w")
@@ -13,7 +13,6 @@ script = ExtResource("1_q0o3w")
 texture = ExtResource("1_jqht7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-0.5, 0)
 shape = SubResource("RectangleShape2D_152ct")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

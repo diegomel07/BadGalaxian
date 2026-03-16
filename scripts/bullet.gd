@@ -1,26 +1,30 @@
 extends Area2D
 
-var pos
-var dir
+var pos: Vector2
+var rota: float
+var dir: Vector2
+var speed = 100
+
 var screen_size
-@export var speed = 100
+
 
 func _ready():
 	global_position = pos
+	global_rotation = rota
 	screen_size = get_viewport_rect().size
 	
 func _process(delta):
-	if position.y < -10:
+	position += dir.rotated(rotation) * speed * delta
+	
+	if (position.y > screen_size.y + 10) or (position.y < 0):
 		queue_free()
-	
-	var velocity = Vector2.ZERO # The player's movement vector.
-	velocity.y += dir
-	
-	if velocity.length() > 0:
-		velocity = velocity.normalized() * speed
-	position += velocity * delta
+		
 
-
+func free_bullet():
+	return true
 
 func _on_area_entered(area):
-	queue_free()
+	if !area.has_method("free_bullet"):
+		if area.has_method("is_enemy") and area.is_invincible: 
+			pass
+		else: queue_free()
