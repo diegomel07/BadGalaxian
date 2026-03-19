@@ -1,10 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://c2ewhrbw6q2dw"]
+[gd_scene load_steps=4 format=3 uid="uid://c2ewhrbw6q2dw"]
 
 [ext_resource type="PackedScene" uid="uid://bsuxuiarhyge8" path="res://scenes/spaceship.tscn" id="1_biudj"]
 [ext_resource type="Script" path="res://scripts/level.gd" id="1_dgf0e"]
+[ext_resource type="PackedScene" uid="uid://x4keuh2gacdr" path="res://scenes/moving_background.tscn" id="2_f0c2k"]
 
 [node name="level" type="Node2D"]
 script = ExtResource("1_dgf0e")
+
+[node name="MovingBackground" parent="." instance=ExtResource("2_f0c2k")]
 
 [node name="spaceship" parent="." instance=ExtResource("1_biudj")]
 position = Vector2(108, 237)

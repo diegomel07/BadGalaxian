@@ -2,7 +2,9 @@ res://scenes/level.tscn
 res://scenes/spaceship.tscn
 res://scenes/enemy.tscn
 res://scenes/bullet.tscn
-res://scripts/spaceship.gd
-res://scripts/enemy.gd
-res://scripts/bullet.gd
+res://scenes/bezier.tscn
+res://scenes/sin.tscn
 res://scripts/level.gd
+res://scripts/spaceship.gd
+res://scroll.gdshader
+res://scenes/moving_background.tscn
