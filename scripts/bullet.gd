@@ -15,10 +15,8 @@ func _ready():
 	
 func _process(delta):
 	position += dir.rotated(rotation) * speed * delta
-	
 	if (position.y > screen_size.y + 10) or (position.y < 0):
 		queue_free()
-		
 
 func free_bullet():
 	return true

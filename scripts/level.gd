@@ -19,7 +19,9 @@ func _ready():
 func _process(delta):
 	if time_start + 2000 <= Time.get_ticks_msec():
 		time_start = Time.get_ticks_msec()
-		enemies.get_children()[randi_range(0, enemies.get_children().size()-1)].can_move = true
+		var randi_enemy = enemies.get_children()[randi_range(0, enemies.get_children().size()-1)]
+		randi_enemy.player_pos = player.global_position
+		randi_enemy.can_move = true
 
 func spawn_enemy_block(type, cant_x, cant_y):
 	var spacing_x = 15
@@ -37,7 +39,6 @@ func spawn_enemy_block(type, cant_x, cant_y):
 				start_y + j * spacing_y
 			)
 			
-			enemy.player_pos = player.global_position
 			enemies.add_child.call_deferred(enemy)
 
 func spawn_enemy_line(cant):

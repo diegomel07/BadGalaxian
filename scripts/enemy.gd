@@ -12,6 +12,7 @@ var is_invincible: bool = true
 var time = 0
 var bezier_points = []
 var can_move = false
+var allow_create_bezier_points = true
 
 var pos: Vector2
 var speed = 0.16
@@ -22,7 +23,7 @@ func _ready():
 	time_start = Time.get_ticks_msec()
 	global_position = pos
 	screen_size = get_viewport_rect().size
-	bezier_points = create_bezier_points()
+	#bezier_points = create_bezier_points()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -32,6 +33,10 @@ func _process(delta):
 	
 	if can_move:
 		is_invincible = false
+		if allow_create_bezier_points:
+			bezier_points = create_bezier_points()
+			allow_create_bezier_points = false
+		
 		move_bezier(delta)
 		
 		if time_start + 2000 <= Time.get_ticks_msec():
@@ -67,9 +72,10 @@ func create_bezier_points():
 	if global_position.x < screen_size.x/2:
 		p1 = Vector2(global_position.x-50, global_position.y-50)
 	else:
-		p1 = Vector2(global_position.x+50, global_position.y-50)
-	var p2 = Vector2(player_pos.x, player_pos.y+25)
+		p1 = Vector2(global_position.x+50, global_position.y+50)
+	var p2 = Vector2(player_pos.x, player_pos.y)
 	
+	print(p1)
 	return [p0, p1, p2]
 
 func shoot():
