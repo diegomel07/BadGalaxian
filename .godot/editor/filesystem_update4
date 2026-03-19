@@ -1,7 +1,6 @@
+res://scenes/enemy.tscn
+res://scripts/enemy.gd
 res://scenes/level.tscn
 res://scenes/spaceship.tscn
-res://scenes/enemy.tscn
 res://scenes/bullet.tscn
-res://scripts/level.gd
 res://scripts/bullet.gd
-res://scripts/enemy.gd

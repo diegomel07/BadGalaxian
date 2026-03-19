@@ -75,7 +75,6 @@ func create_bezier_points():
 		p1 = Vector2(global_position.x+50, global_position.y+50)
 	var p2 = Vector2(player_pos.x, player_pos.y)
 	
-	print(p1)
 	return [p0, p1, p2]
 
 func shoot():
@@ -83,6 +82,7 @@ func shoot():
 	bullet.dir = Vector2.DOWN
 	bullet.pos = $shoot.global_position 
 	bullet.rota = rotation
+	bullet.from_enemy = true
 	get_parent().add_child(bullet)
 	
 func is_enemy():
@@ -91,5 +91,7 @@ func is_enemy():
 func _on_area_entered(area):
 	if not is_invincible:
 		if !area.has_method("is_enemy"):
-			queue_free()
+			if area.has_method("free_bullet") and !area.from_enemy:
+				area.queue_free()
+				queue_free()
 		

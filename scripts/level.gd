@@ -14,7 +14,6 @@ func _ready():
 	screen_size = get_viewport_rect().size
 	spawn_enemy_block(1, 10, 3)
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if time_start + 2000 <= Time.get_ticks_msec():
@@ -41,6 +40,8 @@ func spawn_enemy_block(type, cant_x, cant_y):
 			
 			enemies.add_child.call_deferred(enemy)
 
+
+## ---------------------------  not used methods
 func spawn_enemy_line(cant):
 	var spacing = 30
 	var start_x = (screen_size.x/2 - (cant * spacing)/2) + 6
