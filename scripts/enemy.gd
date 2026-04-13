@@ -7,7 +7,6 @@ var player_pos: Vector2
 #@export var speed = randi_range(20,40)
 var screen_size: Vector2
 var time_start: int
-var is_invincible: bool = true
 
 var time = 0
 var bezier_points = []
@@ -32,7 +31,6 @@ func _process(delta):
 		queue_free()
 	
 	if can_move:
-		is_invincible = false
 		if allow_create_bezier_points:
 			bezier_points = create_bezier_points()
 			allow_create_bezier_points = false
@@ -73,7 +71,7 @@ func create_bezier_points():
 		p1 = Vector2(global_position.x-50, global_position.y-50)
 	else:
 		p1 = Vector2(global_position.x+50, global_position.y+50)
-	var p2 = Vector2(player_pos.x, player_pos.y)
+	var p2 = Vector2(player_pos.x, player_pos.y + 40)
 	
 	return [p0, p1, p2]
 
@@ -83,15 +81,14 @@ func shoot():
 	bullet.pos = $shoot.global_position 
 	bullet.rota = rotation
 	bullet.from_enemy = true
-	get_parent().add_child(bullet)
+	add_child(bullet)
 	
 func is_enemy():
 	return true
 
 func _on_area_entered(area):
-	if not is_invincible:
-		if !area.has_method("is_enemy"):
-			if area.has_method("free_bullet") and !area.from_enemy:
-				area.queue_free()
-				queue_free()
+	if !area.has_method("is_enemy"):
+		if area.has_method("free_bullet") and !area.from_enemy:
+			area.queue_free()
+			queue_free()
 		

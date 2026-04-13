@@ -2,25 +2,65 @@ extends Node2D
 
 @onready var player = $spaceship
 @onready var enemies = $enemies
+@onready var moving_enemies = $moving_enemies
 
 var enemy_path = preload("res://scenes/enemy.tscn")
 
 var screen_size
 var time_start
+var block_width: int
+
+var speed = 40
+var direction = 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	time_start = Time.get_ticks_msec()
 	screen_size = get_viewport_rect().size
 	spawn_enemy_block(1, 10, 3)
+	await get_tree().process_frame
+	block_width = get_block_width()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if time_start + 2000 <= Time.get_ticks_msec():
+	idle_enemy_block(delta)
+
+	if time_start + 4000 <= Time.get_ticks_msec():
 		time_start = Time.get_ticks_msec()
 		var randi_enemy = enemies.get_children()[randi_range(0, enemies.get_children().size()-1)]
 		randi_enemy.player_pos = player.global_position
 		randi_enemy.can_move = true
+		randi_enemy.reparent(moving_enemies, true)
+		block_width = get_block_width()
+
+func idle_enemy_block(delta):
+	# movimiento horizontal de enemigos
+	var static_enemies = []
+	for enemy in enemies.get_children():
+		if enemy.can_move:
+			static_enemies.append(enemy) 
+			
+	enemies.position.x += direction * speed * delta
+	
+	if enemies.position.x <= -30:
+		enemies.position.x = -30
+		direction = 1
+
+	elif enemies.position.x + block_width >= screen_size.x - 55:
+		enemies.position.x = screen_size.x - block_width - 55
+		direction = -1
+	
+
+func get_block_width():
+	var min_x = INF
+	var max_x = -INF
+
+	for e in enemies.get_children():
+		min_x = min(min_x, e.position.x)
+		max_x = max(max_x, e.position.x)
+	
+	print(block_width)
+	return max_x - min_x
 
 func spawn_enemy_block(type, cant_x, cant_y):
 	var spacing_x = 15

@@ -25,6 +25,6 @@ func free_bullet():
 
 func _on_area_entered(area):
 	if !area.has_method("free_bullet"):
-		if area.has_method("is_enemy") and (area.is_invincible or area.can_move): 
+		if area.has_method("is_enemy") and !area.can_move: 
 			pass
 		else: queue_free()
