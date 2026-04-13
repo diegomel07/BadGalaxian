@@ -17,21 +17,27 @@ var direction = 1
 func _ready():
 	time_start = Time.get_ticks_msec()
 	screen_size = get_viewport_rect().size
-	spawn_enemy_block(1, 10, 3)
+	spawn_enemy_block(1, 1, 1)
 	await get_tree().process_frame
 	block_width = get_block_width()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	idle_enemy_block(delta)
-
-	if time_start + 4000 <= Time.get_ticks_msec():
+	
+	# devolver enemigos al nodo enemies
+	for enemy in moving_enemies.get_children():
+		if enemy.position == enemy.base_position:
+			enemy.reparent(enemies, false)
+	
+	#idle_enemy_block(delta)
+	if time_start + 10000 <= Time.get_ticks_msec():
 		time_start = Time.get_ticks_msec()
-		var randi_enemy = enemies.get_children()[randi_range(0, enemies.get_children().size()-1)]
-		randi_enemy.player_pos = player.global_position
-		randi_enemy.can_move = true
-		randi_enemy.reparent(moving_enemies, true)
-		block_width = get_block_width()
+		if enemies.get_children().size() != 0:
+			var randi_enemy = enemies.get_children()[randi_range(0, enemies.get_children().size()-1)]
+			randi_enemy.player_pos = player.global_position 
+			randi_enemy.can_move = true
+			randi_enemy.reparent(moving_enemies, true)
+			block_width = get_block_width()
 
 func idle_enemy_block(delta):
 	# movimiento horizontal de enemigos
@@ -59,7 +65,6 @@ func get_block_width():
 		min_x = min(min_x, e.position.x)
 		max_x = max(max_x, e.position.x)
 	
-	print(block_width)
 	return max_x - min_x
 
 func spawn_enemy_block(type, cant_x, cant_y):
@@ -72,14 +77,15 @@ func spawn_enemy_block(type, cant_x, cant_y):
 	for i in range(cant_x):
 		for j in range(cant_y):
 			var enemy = enemy_path.instantiate()
-	
+			
 			enemy.pos = Vector2(
 				start_x + i * spacing_x,
 				start_y + j * spacing_y
 			)
 			
+			enemy.base_position = enemy.pos
+			
 			enemies.add_child.call_deferred(enemy)
-
 
 ## ---------------------------  not used methods
 func spawn_enemy_line(cant):

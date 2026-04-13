@@ -12,9 +12,11 @@ var time = 0
 var bezier_points = []
 var can_move = false
 var allow_create_bezier_points = true
+var base_position: Vector2
 
 var pos: Vector2
 var speed = 0.16
+var returning = false
 
 
 # Called when the node enters the scene tree for the first time.
@@ -27,28 +29,20 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if position.y > screen_size.y+10:
-		queue_free()
+	if position.y > screen_size.y+10 or returning:
+		returning = true
+		return_to_base(delta)
 	
 	if can_move:
 		if allow_create_bezier_points:
 			bezier_points = create_bezier_points()
 			allow_create_bezier_points = false
-		
+	
 		move_bezier(delta)
 		
 		if time_start + 2000 <= Time.get_ticks_msec():
 			time_start = Time.get_ticks_msec()
 			shoot()
-
-func move_normal(delta):
-	var velocity = Vector2.ZERO
-	velocity.y += 1
-		
-	if velocity.length() > 0:
-		velocity = velocity.normalized() * speed
-	position += velocity * delta
-	position = position.clamp(Vector2.ZERO, screen_size+Vector2(0,20))
 
 func move_bezier(delta):
 	var t2 = smoothstep(0.0, 1.0, time)
@@ -91,4 +85,30 @@ func _on_area_entered(area):
 		if area.has_method("free_bullet") and !area.from_enemy:
 			area.queue_free()
 			queue_free()
+
+
+func return_to_base(delta):
+	can_move = false
+	
+	var dir = (base_position - position).normalized()
+	var returning_speed = 200
+
+	position += dir * returning_speed * delta
+
+	if position.distance_to(base_position) < 5:
+		returning = false
+		position = base_position
 		
+		time = 0
+		allow_create_bezier_points = true
+
+# ------------------ not used
+
+func move_normal(delta):
+	var velocity = Vector2.ZERO
+	velocity.y += 1
+		
+	if velocity.length() > 0:
+		velocity = velocity.normalized() * speed
+	position += velocity * delta
+	position = position.clamp(Vector2.ZERO, screen_size+Vector2(0,20))
