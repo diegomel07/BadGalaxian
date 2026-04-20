@@ -45,10 +45,61 @@ func _process(delta):
 		time_start = Time.get_ticks_msec()
 		if enemies.get_children().size() != 0:
 			var randi_enemy = enemies.get_children()[randi_range(0, enemies.get_children().size()-1)]
-			randi_enemy.player_pos = player.global_position 
-			randi_enemy.can_move = true
-			randi_enemy.reparent(moving_enemies, true)
+			launch_enemy(randi_enemy)
 			block_width = get_block_width()
+
+func launch_enemy(enemy):
+	
+	if enemy.type != 4:
+		# lanzar el principal
+		enemy.player_pos = player.global_position 
+		enemy.can_move = true
+		enemy.reparent(moving_enemies, true)
+		
+		# lógica especial
+		if enemy.type == 1:
+			launch_support_for_type1(enemy)
+
+func launch_support_for_type1(main_enemy):
+	var closest_type1 = null
+	var type4_above = null
+	
+	var min_dist = INF
+	var min_y_diff = INF
+	
+	for e in enemies.get_children():
+		if e.can_move or e == main_enemy:
+			continue
+		
+		# 🔹 tipo 1 de al lado (misma fila)
+		if e.type == 1 and abs(e.position.y - main_enemy.position.y) < 5:
+			var dist = abs(e.position.x - main_enemy.position.x)
+			if dist < min_dist:
+				min_dist = dist
+				closest_type1 = e
+		
+		# 🔹 tipo 4 de arriba
+		if e.type == 4 and e.position.y < main_enemy.position.y:
+			var y_diff = main_enemy.position.y - e.position.y
+			
+			# opcional: que esté alineado en X
+			var x_diff = abs(e.position.x - main_enemy.position.x)
+			
+			if y_diff < min_y_diff and x_diff < 20:
+				min_y_diff = y_diff
+				type4_above = e
+	
+	# lanzar tipo 1 lateral
+	if closest_type1:
+		closest_type1.player_pos = player.global_position
+		closest_type1.can_move = true
+		closest_type1.reparent(moving_enemies, true)
+	
+	# lanzar tipo 4 de arriba
+	if type4_above:
+		type4_above.player_pos = player.global_position
+		type4_above.can_move = true
+		type4_above.reparent(moving_enemies, true)
 
 func idle_enemy_block(delta):
 	# movimiento horizontal de enemigos
@@ -89,7 +140,7 @@ func get_block_height():
 
 func spawn_enemy_block(type, cant_x, cant_y):
 	var spacing_x = 15
-	var spacing_y = 15
+	var spacing_y = 12
 	
 	var start_x = (screen_size.x / 2 - (cant_x * spacing_x) / 2) + 6
 	

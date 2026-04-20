@@ -1,0 +1,18 @@
+[gd_resource type="SpriteFrames" load_steps=3 format=3 uid="uid://bvnia4s2vim3f"]
+
+[ext_resource type="Texture2D" uid="uid://dhgdhxyq8g7if" path="res://art/enemy4.png" id="1_sf07q"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qutsy"]
+atlas = ExtResource("1_sf07q")
+region = Rect2(0, 0, 11, 11)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qutsy")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]

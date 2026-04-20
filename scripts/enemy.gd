@@ -51,13 +51,15 @@ func _process(delta):
 func setup_by_type():
 	match type:
 		1:
-			$Sprite2D.texture = preload("res://art/enemy.png")
+			$AnimatedSprite2D.sprite_frames = preload("res://recursos/enemy_1.tres")
 		2:
-			$Sprite2D.texture = preload("res://art/enemy2.png")
+			$AnimatedSprite2D.sprite_frames = preload("res://recursos/enemy_2.tres")
 		3:
-			$Sprite2D.texture = preload("res://art/enemy3.png")
+			$AnimatedSprite2D.sprite_frames = preload("res://recursos/enemy_3.tres")
 		4:
-			$Sprite2D.texture = preload("res://art/enemy4.png")
+			$AnimatedSprite2D.sprite_frames = preload("res://recursos/enemy_4.tres")
+	
+	$AnimatedSprite2D.play("idle")
 
 func move_bezier(delta):
 	var t2 = smoothstep(0.0, 1.0, time)

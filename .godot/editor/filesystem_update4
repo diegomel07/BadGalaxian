@@ -1,4 +1,10 @@
-res://scenes/enemy.tscn
-res://scripts/enemy.gd
 res://scenes/level.tscn
 res://scripts/level.gd
+res://scenes/enemy.tscn
+res://scenes/bullet.tscn
+res://scripts/bullet.gd
+res://scripts/enemy.gd
+res://recursos/enemy_1.tres
+res://recursos/enemy_2.tres
+res://recursos/enemy_3.tres
+res://recursos/enemy_4.tres

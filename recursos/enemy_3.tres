@@ -1,0 +1,25 @@
+[gd_resource type="SpriteFrames" load_steps=4 format=3 uid="uid://ctf8xbng8io1u"]
+
+[ext_resource type="Texture2D" uid="uid://bae7rig5wiy4w" path="res://art/enemy3-shhet.png" id="1_2g3yy"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8j8sy"]
+atlas = ExtResource("1_2g3yy")
+region = Rect2(0, 0, 11, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sfvsf"]
+atlas = ExtResource("1_2g3yy")
+region = Rect2(11, 0, 11, 8)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8j8sy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sfvsf")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
