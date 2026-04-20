@@ -35,8 +35,10 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	
 	# devolver enemigos al nodo enemies
 	for enemy in moving_enemies.get_children():
+		enemy.current_player_pos = player.global_position
 		if enemy.position == enemy.base_position:
 			enemy.reparent(enemies, true)
 	
@@ -49,10 +51,9 @@ func _process(delta):
 			block_width = get_block_width()
 
 func launch_enemy(enemy):
-	
 	if enemy.type != 4:
 		# lanzar el principal
-		enemy.player_pos = player.global_position 
+		enemy.player_pos_on_launching = player.global_position 
 		enemy.can_move = true
 		enemy.reparent(moving_enemies, true)
 		
@@ -71,14 +72,14 @@ func launch_support_for_type1(main_enemy):
 		if e.can_move or e == main_enemy:
 			continue
 		
-		# 🔹 tipo 1 de al lado (misma fila)
+		# tipo 1 de al lado (misma fila)
 		if e.type == 1 and abs(e.position.y - main_enemy.position.y) < 5:
 			var dist = abs(e.position.x - main_enemy.position.x)
 			if dist < min_dist:
 				min_dist = dist
 				closest_type1 = e
 		
-		# 🔹 tipo 4 de arriba
+		# tipo 4 de arriba
 		if e.type == 4 and e.position.y < main_enemy.position.y:
 			var y_diff = main_enemy.position.y - e.position.y
 			
@@ -91,13 +92,13 @@ func launch_support_for_type1(main_enemy):
 	
 	# lanzar tipo 1 lateral
 	if closest_type1:
-		closest_type1.player_pos = player.global_position
+		closest_type1.player_pos_on_launching = player.global_position
 		closest_type1.can_move = true
 		closest_type1.reparent(moving_enemies, true)
 	
 	# lanzar tipo 4 de arriba
 	if type4_above:
-		type4_above.player_pos = player.global_position
+		type4_above.player_pos_on_launching = player.global_position
 		type4_above.can_move = true
 		type4_above.reparent(moving_enemies, true)
 
