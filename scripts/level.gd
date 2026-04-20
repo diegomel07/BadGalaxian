@@ -3,6 +3,7 @@ extends Node2D
 @onready var player = $spaceship
 @onready var enemies = $enemies
 @onready var moving_enemies = $moving_enemies
+@onready var bullets = $bullets
 
 var enemy_path = preload("res://scenes/enemy.tscn")
 
@@ -17,20 +18,19 @@ var direction = 1
 func _ready():
 	time_start = Time.get_ticks_msec()
 	screen_size = get_viewport_rect().size
-	spawn_enemy_block(1, 1, 1)
+	spawn_enemy_block(1, 10, 3)
 	await get_tree().process_frame
 	block_width = get_block_width()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	
 	# devolver enemigos al nodo enemies
 	for enemy in moving_enemies.get_children():
 		if enemy.position == enemy.base_position:
-			enemy.reparent(enemies, false)
+			enemy.reparent(enemies, true)
 	
-	#idle_enemy_block(delta)
-	if time_start + 10000 <= Time.get_ticks_msec():
+	idle_enemy_block(delta)
+	if time_start + 2000 <= Time.get_ticks_msec():
 		time_start = Time.get_ticks_msec()
 		if enemies.get_children().size() != 0:
 			var randi_enemy = enemies.get_children()[randi_range(0, enemies.get_children().size()-1)]
@@ -55,7 +55,6 @@ func idle_enemy_block(delta):
 	elif enemies.position.x + block_width >= screen_size.x - 55:
 		enemies.position.x = screen_size.x - block_width - 55
 		direction = -1
-	
 
 func get_block_width():
 	var min_x = INF
@@ -84,6 +83,8 @@ func spawn_enemy_block(type, cant_x, cant_y):
 			)
 			
 			enemy.base_position = enemy.pos
+			enemy.bullets_parent = bullets
+			enemy.enemies_node = enemies
 			
 			enemies.add_child.call_deferred(enemy)
 

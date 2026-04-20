@@ -1,6 +1,7 @@
 extends Area2D
 
 var bullet_path = preload("res://scenes/bullet.tscn")
+var bullets_parent: Node
 
 var player_pos: Vector2
 
@@ -13,6 +14,7 @@ var bezier_points = []
 var can_move = false
 var allow_create_bezier_points = true
 var base_position: Vector2
+var enemies_node
 
 var pos: Vector2
 var speed = 0.16
@@ -29,15 +31,18 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if position.y > screen_size.y+10 or returning:
-		returning = true
+	if position.y > screen_size.y + 10 and !returning:
+		start_return()
+	
+	if returning:
 		return_to_base(delta)
+		return
 	
 	if can_move:
 		if allow_create_bezier_points:
 			bezier_points = create_bezier_points()
 			allow_create_bezier_points = false
-	
+		
 		move_bezier(delta)
 		
 		if time_start + 2000 <= Time.get_ticks_msec():
@@ -70,12 +75,16 @@ func create_bezier_points():
 	return [p0, p1, p2]
 
 func shoot():
+	if returning:
+		return
+	
 	var bullet = bullet_path.instantiate()
+	
+	bullets_parent.add_child(bullet)
+	
+	bullet.global_position = $shoot.global_position
 	bullet.dir = Vector2.DOWN
-	bullet.pos = $shoot.global_position 
-	bullet.rota = rotation
 	bullet.from_enemy = true
-	add_child(bullet)
 	
 func is_enemy():
 	return true
@@ -86,21 +95,34 @@ func _on_area_entered(area):
 			area.queue_free()
 			queue_free()
 
-
-func return_to_base(delta):
+func start_return():
+	returning = true
 	can_move = false
 	
-	var dir = (base_position - position).normalized()
-	var returning_speed = 200
+	# TP SOLO UNA VEZ
+	position.y = -50
 
-	position += dir * returning_speed * delta
+func return_to_base(delta):
 
-	if position.distance_to(base_position) < 5:
+	var target = enemies_node.to_global(base_position)
+
+	var dir = (target - global_position).normalized()
+	var return_speed = 200
+
+	global_position += dir * return_speed * delta
+
+	if global_position.distance_to(target) < 5:
 		returning = false
+		
+		reparent(enemies_node, true)
+		
 		position = base_position
 		
+		# reset
 		time = 0
 		allow_create_bezier_points = true
+		can_move = false
+
 
 # ------------------ not used
 
