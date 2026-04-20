@@ -1,6 +1,6 @@
 extends Area2D
 
-@export var speed = 100
+@export var speed = 50
 
 var bullet_path = preload("res://scenes/bullet.tscn")
 var bullet: Area2D
