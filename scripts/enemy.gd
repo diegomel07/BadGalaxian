@@ -5,7 +5,7 @@ var bullets_parent: Node
 
 var player_pos: Vector2
 
-#@export var speed = randi_range(20,40)
+var type = 1
 var screen_size: Vector2
 var time_start: int
 
@@ -20,14 +20,13 @@ var pos: Vector2
 var speed = 0.16
 var returning = false
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	setup_by_type()
 	time_start = Time.get_ticks_msec()
 	global_position = pos
 	screen_size = get_viewport_rect().size
 	#bezier_points = create_bezier_points()
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -48,6 +47,17 @@ func _process(delta):
 		if time_start + 2000 <= Time.get_ticks_msec():
 			time_start = Time.get_ticks_msec()
 			shoot()
+
+func setup_by_type():
+	match type:
+		1:
+			$Sprite2D.texture = preload("res://art/enemy.png")
+		2:
+			$Sprite2D.texture = preload("res://art/enemy2.png")
+		3:
+			$Sprite2D.texture = preload("res://art/enemy3.png")
+		4:
+			$Sprite2D.texture = preload("res://art/enemy4.png")
 
 func move_bezier(delta):
 	var t2 = smoothstep(0.0, 1.0, time)

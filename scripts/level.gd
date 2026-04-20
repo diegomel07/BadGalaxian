@@ -18,8 +18,19 @@ var direction = 1
 func _ready():
 	time_start = Time.get_ticks_msec()
 	screen_size = get_viewport_rect().size
-	spawn_enemy_block(1, 10, 3)
+	
+	spawn_enemy_block(4, 4, 1)
 	await get_tree().process_frame
+	
+	spawn_enemy_block(1, 6, 1)
+	await get_tree().process_frame
+	
+	spawn_enemy_block(2, 8, 1)
+	await get_tree().process_frame
+	
+	spawn_enemy_block(3, 10, 3)
+	await get_tree().process_frame
+	
 	block_width = get_block_width()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -59,19 +70,34 @@ func idle_enemy_block(delta):
 func get_block_width():
 	var min_x = INF
 	var max_x = -INF
-
+	
 	for e in enemies.get_children():
 		min_x = min(min_x, e.position.x)
 		max_x = max(max_x, e.position.x)
 	
 	return max_x - min_x
 
+func get_block_height():
+	var min_y = INF
+	var max_y = -INF
+	
+	for e in enemies.get_children():
+		min_y = min(min_y, e.position.y)
+		max_y = max(max_y, e.position.y)
+	
+	return max_y - min_y
+
 func spawn_enemy_block(type, cant_x, cant_y):
 	var spacing_x = 15
 	var spacing_y = 15
 	
 	var start_x = (screen_size.x / 2 - (cant_x * spacing_x) / 2) + 6
-	var start_y = 64
+	
+	var offset_y = 0
+	if enemies.get_child_count() > 0:
+		offset_y = get_block_height() + spacing_y
+	
+	var start_y = 30 + offset_y
 	
 	for i in range(cant_x):
 		for j in range(cant_y):
@@ -85,8 +111,9 @@ func spawn_enemy_block(type, cant_x, cant_y):
 			enemy.base_position = enemy.pos
 			enemy.bullets_parent = bullets
 			enemy.enemies_node = enemies
+			enemy.type = type
 			
-			enemies.add_child.call_deferred(enemy)
+			enemies.add_child(enemy)
 
 ## ---------------------------  not used methods
 func spawn_enemy_line(cant):
