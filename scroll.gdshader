@@ -1,36 +1,40 @@
 shader_type canvas_item;
 
-uniform float speed = .5;
-uniform float intensity = 1.5;
-uniform float density = 50.0;
+uniform float star_density : hint_range(0.0, 1.0) = 0.982;
+uniform float twinkle_speed = 2.0;
+uniform float speed = 0.3;
 
-// Hash simple para pseudo-aleatoriedad
 float hash(vec2 p) {
-    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+    p = fract(p * vec2(234.34, 435.345));
+    p += dot(p, p + 34.23);
+    return fract(p.x * p.y);
 }
 
 void fragment() {
-	UV.y -= TIME * speed; 
-    vec4 tex = texture(TEXTURE, UV);
+    vec2 uv = UV;
+    uv.y -= TIME * speed * 0.15;
 
-    // Detectar estrellas (blanco)
-    float star = tex.r;
+    vec2 pixel = floor(uv * vec2(256.0, 224.0));
 
-    if (star > 0.8) {
-        // Coordenadas discretizadas para separar estrellas
-        vec2 id = floor(UV * density);
+    float rnd  = hash(pixel);
+    float rnd2 = hash(pixel + 13.57);
+    float rnd3 = hash(pixel + 91.13);
 
-        // Fase aleatoria por estrella
-        float rnd = hash(id);
+    float exists = step(star_density, rnd);
 
-        // Variación suave (no ruido brusco)
-        float twinkle = sin(TIME * speed + rnd * 6.2831) * 0.5 + 0.5;
+    float twinkle = sin(TIME * twinkle_speed * (0.3 + rnd * 1.5) + rnd3 * 6.28) * 0.5 + 0.5;
+    float fade = step(0.25, twinkle) * twinkle;
 
-        // Intensidad final
-        float glow = mix(0.5, 1.0, twinkle) * intensity;
+    float brightness = exists * fade;
 
-        COLOR = vec4(vec3(glow), 1.0);
+    vec3 col;
+    if (rnd2 < 0.7) {
+        col = vec3(1.0, 1.0, 1.0);
+    } else if (rnd2 < 0.85) {
+        col = vec3(0.6, 0.7, 1.0);
     } else {
-        COLOR = tex;
+        col = vec3(1.0, 0.5, 0.4);
     }
+
+    COLOR = vec4(col * brightness * 0.45, 1.0);
 }

@@ -8,6 +8,11 @@
 script = ExtResource("1_dgf0e")
 
 [node name="MovingBackground" parent="." instance=ExtResource("2_f0c2k")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
 
 [node name="spaceship" parent="." instance=ExtResource("1_biudj")]
 position = Vector2(108, 237)
