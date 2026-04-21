@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-uniform float star_density : hint_range(0.0, 1.0) = 0.982;
+uniform float star_density : hint_range(0.0, 1.0) = 0.99;
 uniform float twinkle_speed = 2.0;
 uniform float speed = 0.3;
 
@@ -14,11 +14,14 @@ void fragment() {
     vec2 uv = UV;
     uv.y -= TIME * speed * 0.15;
 
-    vec2 pixel = floor(uv * vec2(256.0, 224.0));
+    // cell_id es la "identidad" estable de la estrella (no cambia con el tiempo)
+    vec2 scaled = uv * vec2(256.0, 224.0);
+    vec2 cell_id = floor(scaled);
 
-    float rnd  = hash(pixel);
-    float rnd2 = hash(pixel + 13.57);
-    float rnd3 = hash(pixel + 91.13);
+    // rnd se calcula solo con cell_id, no con TIME
+    float rnd  = hash(cell_id);
+    float rnd2 = hash(cell_id + 13.57);
+    float rnd3 = hash(cell_id + 91.13);
 
     float exists = step(star_density, rnd);
 
@@ -31,9 +34,9 @@ void fragment() {
     if (rnd2 < 0.7) {
         col = vec3(1.0, 1.0, 1.0);
     } else if (rnd2 < 0.85) {
-        col = vec3(0.6, 0.7, 1.0);
+        col = vec3(1.0, 1.0, 1.0);
     } else {
-        col = vec3(1.0, 0.5, 0.4);
+        col = vec3(1.0, 1.0, 1.0);
     }
 
     COLOR = vec4(col * brightness * 0.45, 1.0);
