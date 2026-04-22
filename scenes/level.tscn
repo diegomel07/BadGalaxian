@@ -7,10 +7,11 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_h2egw"]
 shader = ExtResource("4_ymxp1")
-shader_parameter/scan_line_strength = 0.772
-shader_parameter/curvature = 0.06
-shader_parameter/vignette_strength = 0.62
-shader_parameter/brightness = 1.1
+shader_parameter/scanline_strength = 0.2
+shader_parameter/blur_amount = 0.6
+shader_parameter/phosphor_glow = 0.25
+shader_parameter/curvature = 0.174
+shader_parameter/vignette_strength = 0.232
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_hab87"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")

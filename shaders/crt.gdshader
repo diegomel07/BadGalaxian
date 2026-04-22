@@ -1,9 +1,10 @@
 shader_type canvas_item;
 
-uniform float scan_line_strength : hint_range(0.0, 1.0) = 0.3;
-uniform float curvature : hint_range(0.0, 0.5) = 0.08;
-uniform float vignette_strength : hint_range(0.0, 1.0) = 0.4;
-uniform float brightness = 1.1;
+uniform float scanline_strength : hint_range(0.0, 1.0) = 0.25;
+uniform float blur_amount : hint_range(0.0, 3.0) = 0.8;
+uniform float phosphor_glow : hint_range(0.0, 1.0) = 0.3;
+uniform float curvature : hint_range(0.0, 0.5) = 0.04;
+uniform float vignette_strength : hint_range(0.0, 1.0) = 0.35;
 
 vec2 curve(vec2 uv) {
     uv = uv * 2.0 - 1.0;
@@ -15,25 +16,33 @@ vec2 curve(vec2 uv) {
 void fragment() {
     vec2 uv = curve(UV);
 
-    // 1.0 si está dentro de pantalla, 0.0 si está fuera
-    float inside = step(0.0, uv.x) * step(uv.x, 1.0)
-                 * step(0.0, uv.y) * step(uv.y, 1.0);
+    if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
+    COLOR = vec4(0.0, 0.0, 0.0, 1.0);
+} else {
 
-    vec4 col = texture(TEXTURE, clamp(uv, 0.0, 1.0));
+    // Blur suave horizontal (simula el desenfoque del CRT)
+    vec2 px = TEXTURE_PIXEL_SIZE * blur_amount;
+    vec4 col  = texture(TEXTURE, uv);
+    col += texture(TEXTURE, uv + vec2(px.x, 0.0));
+    col += texture(TEXTURE, uv - vec2(px.x, 0.0));
+    col /= 3.0;
 
-    // Scanlines
-    float scan = sin(uv.y * SCREEN_PIXEL_SIZE.y * 3.14159 * 800.0) * 0.5 + 0.5;
-    scan = pow(scan, 0.5);
-    col.rgb *= mix(1.0 - scan_line_strength, 1.0, scan);
+    // Scanlines alineadas a píxeles
+    float line = mod(floor(uv.y / TEXTURE_PIXEL_SIZE.y), 2.0);
+    col.rgb *= 1.0 - scanline_strength * line;
+
+    // Phosphor glow — los píxeles brillantes "sangran" a los vecinos
+    vec4 glow = texture(TEXTURE, uv + vec2(px.x * 2.0, 0.0));
+    glow += texture(TEXTURE, uv - vec2(px.x * 2.0, 0.0));
+    glow += texture(TEXTURE, uv + vec2(0.0, px.y * 2.0));
+    glow += texture(TEXTURE, uv - vec2(0.0, px.y * 2.0));
+    glow /= 4.0;
+    col.rgb += glow.rgb * phosphor_glow;
 
     // Viñeta
-    vec2 vig_uv = uv * (1.0 - uv.yx);
-    float vignette = pow(vig_uv.x * vig_uv.y * 15.0, vignette_strength);
-    col.rgb *= vignette;
+    vec2 vig = uv * (1.0 - uv.yx);
+    col.rgb *= pow(vig.x * vig.y * 15.0, vignette_strength);
 
-    // Brillo
-    col.rgb *= brightness;
-
-    // Fuera de la curva queda negro
-    COLOR = mix(vec4(0.0, 0.0, 0.0, 1.0), col, inside);
+    COLOR = col;
+}
 }
