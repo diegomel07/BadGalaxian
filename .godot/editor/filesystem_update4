@@ -1,7 +1,8 @@
-res://scenes/enemy.tscn
+res://scenes/level.tscn
 res://recursos/enemy_1.tres
 res://recursos/enemy_2.tres
 res://recursos/enemy_3.tres
 res://recursos/enemy_4.tres
-res://scripts/enemy.gd
-res://scenes/level.tscn
+res://shaders/crt.gdshader
+res://scenes/moving_background.tscn
+res://scripts/level.gd

@@ -1,9 +1,9 @@
-extends Node2D
+extends Control
 
-@onready var player = $spaceship
-@onready var enemies = $enemies
-@onready var moving_enemies = $moving_enemies
-@onready var bullets = $bullets
+@onready var player =$SubViewportContainer/SubViewport/spaceship
+@onready var enemies = $SubViewportContainer/SubViewport/enemies
+@onready var moving_enemies = $SubViewportContainer/SubViewport/moving_enemies
+@onready var bullets = $SubViewportContainer/SubViewport/bullets
 
 var enemy_path = preload("res://scenes/enemy.tscn")
 

@@ -1,6 +1,9 @@
+Control
+TextureRect
+SubViewportContainer
+SubViewport
 AnimatedSprite2D
 AnimationPlayer
-TextureRect
 Node2D
 Node
 Area2D

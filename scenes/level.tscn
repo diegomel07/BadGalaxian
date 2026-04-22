@@ -1,24 +1,66 @@
-[gd_scene load_steps=4 format=3 uid="uid://c2ewhrbw6q2dw"]
+[gd_scene load_steps=7 format=3 uid="uid://c2ewhrbw6q2dw"]
 
 [ext_resource type="PackedScene" uid="uid://bsuxuiarhyge8" path="res://scenes/spaceship.tscn" id="1_biudj"]
 [ext_resource type="Script" path="res://scripts/level.gd" id="1_dgf0e"]
 [ext_resource type="PackedScene" uid="uid://x4keuh2gacdr" path="res://scenes/moving_background.tscn" id="2_f0c2k"]
+[ext_resource type="Shader" path="res://shaders/crt.gdshader" id="4_ymxp1"]
 
-[node name="level" type="Node2D"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h2egw"]
+shader = ExtResource("4_ymxp1")
+shader_parameter/scan_line_strength = 0.772
+shader_parameter/curvature = 0.06
+shader_parameter/vignette_strength = 0.62
+shader_parameter/brightness = 1.1
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_hab87"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[node name="level" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_dgf0e")
 
-[node name="MovingBackground" parent="." instance=ExtResource("2_f0c2k")]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(224, 256)
+render_target_update_mode = 4
+
+[node name="MovingBackground" parent="SubViewportContainer/SubViewport" instance=ExtResource("2_f0c2k")]
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 grow_horizontal = 1
 grow_vertical = 1
 
-[node name="spaceship" parent="." instance=ExtResource("1_biudj")]
+[node name="spaceship" parent="SubViewportContainer/SubViewport" instance=ExtResource("1_biudj")]
 position = Vector2(108, 237)
 
-[node name="enemies" type="Node2D" parent="."]
+[node name="enemies" type="Node2D" parent="SubViewportContainer/SubViewport"]
 
-[node name="moving_enemies" type="Node2D" parent="."]
+[node name="moving_enemies" type="Node2D" parent="SubViewportContainer/SubViewport"]
 
-[node name="bullets" type="Node2D" parent="."]
+[node name="bullets" type="Node2D" parent="SubViewportContainer/SubViewport"]
+
+[node name="TextureRect" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_h2egw")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.996753, 1.00339)
+texture = SubResource("ViewportTexture_hab87")
